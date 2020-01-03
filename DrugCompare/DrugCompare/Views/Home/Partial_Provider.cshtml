@@ -1,0 +1,140 @@
+﻿@model DrugCompare.Models.DashboardViewModel
+
+
+<div class="section-header">
+    Provider Details
+</div>
+
+
+<article>
+    <div>
+        <table class="table-striped" border="1">
+            <tr class="bold-tr">
+                <td align="center">Provider Name</td>
+                <td align="center">Provider Address</td>
+                <td align="center">Provider Phone</td>
+                <td align="center">Provider Experience</td>
+                <td align="center"></td>
+            </tr>
+            @{ if (Model.SelectedProviderVM != null && Model.SelectedProviderVM.Count > 0)
+                {
+                    foreach (var item in Model.SelectedProviderVM)
+                    {
+                        <tr>
+                            <td>
+                                @Html.Hidden("ProviderId", @item.ProviderId)
+                                <span>@item.ProviderName</span>
+                            </td>
+                            <td>
+                                <span>@item.ProviderAddress</span>
+                            </td>
+                            <td>
+                                <span>@item.ProviderPhone</span>
+                            </td>
+                            <td>
+                                <span>@item.ProviderExperience</span>
+                            </td>
+                            <td>
+                                <a id="btn_selectProvider" class="btn btn-default"><i class="fas fa-sync"></i> Change Provider</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </table>
+    </div>
+
+
+    <div class="modal fade" id="selectProviderModalPopUp" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="section-header">
+                    Provider Details
+                    <button id="DivClose" type="button" class="close popup-Close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="errorMsg" hidden="hidden">
+                    <span style="color:red;">Please select Provider</span>
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div>
+                        <table class="table-bordered table-striped" border="1">
+                            <tr class="bold-tr">
+                                <td>Select</td>
+                                <td>Provider Name</td>
+                                <td>Provider Address</td>
+                                <td>Provider Phone</td>
+                                <td>Provider Experience</td>
+                            </tr>
+
+                            @foreach (var item in Model.ProviderListsVM)
+                            {
+                                <tr>
+                                    <td>
+                                        <input id="Providerid" name="ProviderId" type="radio" providerid="@item.ProviderId" />
+                                    </td>
+                                    <td>
+                                        @item.ProviderName
+                                    </td>
+                                    <td>
+                                        @item.ProviderAddress
+                                    </td>
+                                    <td>
+                                        @item.ProviderPhone
+                                    </td>
+                                    <td>
+                                        @item.ProviderExperience
+                                    </td>
+                                </tr>
+                            }
+                            @*<tr>
+                                    <td colspan="5">
+                                        <input id="btn_ProviderSubmit" type="button" value="Select Provider" class="btn btn-default" />
+                                    </td>
+                                </tr>*@
+                        </table>
+                        <div style="padding-top:12px">
+                            <input id="btn_ProviderSubmit" type="button" value="Select Provider" class="btn" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</article>
+
+
+
+<script>
+    var SelectedProvider = 0;
+
+    $("#btn_selectProvider").click(function () {
+        $('#selectProviderModalPopUp').modal('show');
+        $('#errorMsg').hide();
+    });
+
+    $("input[name=ProviderId]").click(function () {
+
+        SelectedProvider = $(this).attr("providerid");
+        $('#btn_ProviderSubmit').val("Save Selected Provider").addClass("btn-success");
+        //console.log(SelectedPlan);
+    });
+
+    $('#btn_ProviderSubmit').click(function () {
+        debugger;
+        var SelectedProviderId = parseInt(SelectedProvider);
+
+        if (SelectedProviderId > 0) {
+            var jqxhr = $.post("ProvidersList", { 'SelectedProviderId': SelectedProviderId });
+            window.location.reload();
+        }
+        else {
+            $('#errorMsg').show();
+        }
+
+    });
+
+
+</script>

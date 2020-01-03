@@ -1,0 +1,131 @@
+﻿@model DrugCompare.Models.DashboardViewModel
+<style>
+
+</style>
+<div class="section-header">
+    Pharmacy Details
+</div>
+
+<article>
+    <div>
+        <table class="table-striped" border="1">
+            <tr class="bold-tr">
+                <td>Pharmacy Name</td>
+                <td>Pharmacy Address</td>
+                <td>Pharmacy Phone</td>
+                <td></td>
+            </tr>
+            @{ if (Model.SelectedPharmacyVM != null && Model.SelectedPharmacyVM.Count > 0)
+                {
+                    foreach (var item in Model.SelectedPharmacyVM)
+                    {
+                        <tr>
+                            <td>
+                                @Html.Hidden("PharmacyId", @item.PharmacyId)
+                                <span>@item.PharmacyName</span>
+                            </td>
+                            <td>
+                                <span>@item.PharmacyAddress</span>
+                            </td>
+                            <td>
+                                <span>@item.PharmacyPhone</span>
+                            </td>
+                            <td>
+                                <a id="btn_selectPharmacy" class="btn btn-default"><i class="fas fa-sync"></i> Change Pharmacy</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </table>
+    </div>
+
+    <article>
+        <div class="modal fade" id="selectPharmacyModalPopUp" role="dialog">
+            <div class="modal-dialog err-pop" style="">
+                <div class="modal-content">
+                    <div class="section-header">
+                        Pharmacy Details
+                        <button id="DivClose" type="button" class="close popup-Close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div id="errorMsg2" hidden="hidden">
+                        <span style="color:red;"  >Please select Pharmacy</span>
+                    </div>
+                    <div class="modal-body" style="text-align:center;">
+                        <div>
+                            <table class="table-bordered table-striped" border="1">
+                                <tr class="bold-tr">
+                                    <td>Select</td>
+                                    <td>Pharmacy Name</td>
+                                    <td>Pharmacy Address</td>
+                                    <td>Pharmacy Phone</td>
+                                </tr>
+
+                                @foreach (var item in Model.PharmacyListsVM)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input id="Pharmacyid" name="PharmacyId" type="radio" Pharmacyid="@item.PharmacyId" />
+                                        </td>
+                                        <td>
+                                            @item.PharmacyName
+                                        </td>
+                                        <td>
+                                            @item.PharmacyAddress
+                                        </td>
+                                        <td>
+                                            @item.PharmacyPhone
+                                        </td>
+                                    </tr>
+                                }
+                                @*<tr>
+                                    <td colspan="4">
+                                        <input id="btn_PharmacySubmit" type="button" value="Select Pharmacy" class="btn btn-default" />
+                                    </td>
+                                </tr>*@
+                            </table>
+                            <div style="padding-top:12px">
+                                <input id="btn_PharmacySubmit" type="button" value="Select Pharmacy" class="btn" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+</article>
+
+
+<script>
+    var SelectedPharmacy = 0;
+
+    $("#btn_selectPharmacy").click(function () {
+        $('#selectPharmacyModalPopUp').modal('show');
+        $('#errorMsg2').hide();
+    });
+
+    $("input[name=PharmacyId]").click(function () {
+
+        SelectedPharmacy = $(this).attr("Pharmacyid");
+        $('#btn_PharmacySubmit').val("Save Selected Pharmacy").addClass("btn-success");
+        //$('#btn_PharmacySubmit').addClass("text-success");
+        console.log(SelectedPharmacy);
+    });
+
+    $('#btn_PharmacySubmit').click(function () {
+        debugger;
+        var SelectedPharmacyId = parseInt(SelectedPharmacy);
+
+        if (SelectedPharmacyId > 0) {
+            var jqxhr = $.post("PharmacyList", { 'SelectedPharmacyId': SelectedPharmacyId });
+            window.location.reload();
+        }
+        else {
+            $('#errorMsg2').show();
+        }
+
+    });
+
+
+</script>

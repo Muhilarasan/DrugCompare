@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.10.0.min.js" integrity="sha256-2+LznWeWgL7AJ1ciaIG5rFP7GKemzzl+K75tRyTByOE=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </div>*@
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer style="text-align:right">
+            <p>&copy; @DateTime.Now.Year - Drug Compare Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+<style>
+    #Header {
+        background-color: deepskyblue;
+    }
+
+    .section-header {
+        background: orange;
+        font-weight: 400;
+        height: 50px;
+        font-size: xx-large;
+        padding-left: 12px;
+    }
+
+    .popup-Close {
+        background: black !important;
+        padding: 14px !important;
+    }
+
+    body, h2, h3, h4 {
+        font-family: serif;
+    }
+
+    #btn_HomePage:hover,
+    #btn_Login:hover,
+    #SelectedDrug:hover,
+    #btn_selectPlan:hover,
+    #btn_RefilAlternative:hover,
+    #btn_AddDrug:hover,
+    #btn_selectProvider:hover,
+    #btn_selectPharmacy:hover {
+        background-color: orange;
+    }
+
+    h4 {
+        font-size: xx-large;
+    }
+
+    .bold-tr {
+        font-weight: bold;
+    }
+
+</style>

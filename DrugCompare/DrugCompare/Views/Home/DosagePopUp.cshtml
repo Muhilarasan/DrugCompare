@@ -1,0 +1,147 @@
+﻿@model DrugCompare.Models.DrugVM
+
+<div class="modal fade" id="selectPlanModalPopUp" role="dialog">
+    <div class="modal-dialog err-pop" style="width: 650px;">
+        <div class="modal-content">
+            <div class="section-header">
+                Plan Details
+                <button id="DivClose" type="button" class="close popup-Close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="errorMessages">
+            </div>
+            <div class="modal-body" style="text-align:center;">
+
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr class="bold-tr">
+                                        <td>Select</td>
+                                        <td>Dosage List</td>
+                                    </tr>
+                                    @foreach (var item in Model.DrugDosageInfo)
+                                    {
+                                        @Html.Hidden("HiddenDrugID", item.HiddenDrugID);
+                                        <tr>
+                                            <td>
+                                                <input id="DrugDoseId" name="DrugDoseId" type="radio" value="@item.DrugDoseId" DrugDoseId="@item.DrugDoseId" />
+                                            </td>
+                                            <td>
+                                                @Html.Hidden("PlanId", @item.DrugDoseId)
+                                                @item.DosageName
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </td>
+                            <td>
+                                <table>
+                                    <tr class="bold-tr">
+                                        <td>Quantity</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="number" class="btn" id="Quantity" style="border:groove!important" value="" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table>
+                                    <tr class="bold-tr">
+                                        <td>Select</td>
+                                        <td>Frequency Names</td>
+                                    </tr>
+                                    @foreach (var item in Model.DrugFrequencyInfo)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input id="FrequencyId" name="FrequencyId" type="radio" FrequencyId="@item.FrequencyId" />
+                                            </td>
+                                            <td>
+                                                @Html.Hidden("FrequencyId", @item.FrequencyId)
+                                                @item.FrequencyName
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div>
+                    <button id="btn_Dosageinfo" class="btn" style="text-align:right">  Select your drug data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var DoasgeInfoVal = 0;
+    $("input[name='DrugDoseId']").on('click', function () {
+        if ($(this).prop("checked") == true) {
+            DoasgeInfoVal = parseInt($(this).attr("DrugDoseId"));
+            //console.log("DoasgeInfoVal:"+DoasgeInfoVal);
+        }
+    });
+
+    var FrequencyIdVal = 0;
+    $("input[name='FrequencyId']").on('click', function () {
+        if ($(this).prop("checked") == true) {
+            FrequencyIdVal = parseInt($(this).attr("FrequencyId"));
+            //console.log("FrequencyIdVal:"+FrequencyIdVal);
+        }
+    });
+    document.getElementById('selectPlanModalPopUp').onclick = function () {
+        var QuantityVal = $("#Quantity").val();
+        if (DoasgeInfoVal != 0 && FrequencyIdVal != 0 && (QuantityVal != null && QuantityVal != undefined && QuantityVal != ""))
+            $('#btn_Dosageinfo').text("Add Drug to your Prescription List").addClass("btn-success").css('color', '');
+        else
+            $('#btn_Dosageinfo').text("Select your drug data").css({ "background-color": "", "color": "red" });
+    }
+
+    function validate() {
+        var QuantityVal = $("#Quantity").val();
+        if (DoasgeInfoVal == 0)
+            errors = "please Select Dosage of Drug " + "<br />";
+        if (FrequencyIdVal == 0)
+            errors += "please Select Frequency of Drug" + "<br />";
+        if (QuantityVal == null || QuantityVal == undefined || QuantityVal == "")
+            errors += "Please enter the quantity of drug " + "<br />";
+
+        return errors;
+    }
+    var errors = "";
+
+    $('#btn_Dosageinfo').click(function () {
+        var QuantityVal = parseInt($("#Quantity").val());
+
+        errors = "";
+        errors = validate();
+        if (errors != "")
+            $('#errorMessages').html(errors).css('color', 'red');
+        else {
+            $('#errorMessages').html("");
+            //console.log(DoasgeInfoVal, FrequencyIdVal, QuantityVal);
+            var HiddenDrugID = parseInt($('#HiddenDrugID').val());
+            postDrugInfo(DoasgeInfoVal, FrequencyIdVal, QuantityVal, HiddenDrugID);
+
+        }
+    });
+
+    function postDrugInfo(DoasgeInfoVal, FrequencyIdVal, QuantityVal, HiddenDrugID) {
+        $.post("SaveDrugInfo", { 'DoasgeInfoVal': DoasgeInfoVal, 'FrequencyIdVal': FrequencyIdVal, 'QuantityVal': QuantityVal, 'HiddenDrugID': HiddenDrugID }, function (data) {
+            if (data == true) {
+                window.location.href = '@Url.Action("Dashboard", "Home")';
+            }
+            else
+                alert('Notsaved');
+        });
+    }
+
+
+</script>
